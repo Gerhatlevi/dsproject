@@ -13,7 +13,8 @@ def converting_excel_to_csv(excel_file, csv_file):
 ###Preprocessing test data
 def time_weighted_average(group):
     re_date = pd.to_datetime(group['RE_DATE'])
-    last_date = re_date.max()
+    discharge_date = pd.to_datetime(group['Discharge time'], errors='coerce')
+    last_date = discharge_date.max()
     
     delta_days = (last_date - re_date).dt.days
     
