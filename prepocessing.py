@@ -46,8 +46,6 @@ def preprocess_data(test_csv_file, output_csv_file):
     df["RE_DATE"] = pd.to_datetime(df["RE_DATE"], errors='coerce').dt.date
 
     df = df.groupby('PATIENT_ID').apply(time_weighted_average, include_groups=False).reset_index()
-
-    df = df.round(3)
     df = df.drop(columns=["PATIENT_ID", "RE_DATE"])
 
     df.to_csv(output_csv_file, index=False)
@@ -64,6 +62,14 @@ def data_enrichment():
     df_enriched = pd.concat([data1, data2], ignore_index=True)
     df_enriched.to_csv('enriched_data.csv', index=False)
 
+def handle_outliers(df, cols):
+    for col in cols:
+        if col in df.columns:
+            lower = df[col].quantile(0.01)
+            upper = df[col].quantile(0.99)
+            df[col] = df[col].clip(lower, upper)
+    return df
+
 def clean_and_impute(df):
     df = df.dropna(subset=['outcome'])
     if 'age' in df.columns and 'gender' in df.columns:
@@ -75,19 +81,13 @@ def clean_and_impute(df):
     df = df.dropna(subset=cols_to_fix, how='all')
     imputer = SimpleImputer(strategy='median')
     df[cols_to_fix] = imputer.fit_transform(df[cols_to_fix])
+    df = handle_outliers(df, cols_to_fix)
+    df = df.round(3)
     return df
 
-def handle_outliers(df, cols):
-    for col in cols:
-        if col in df.columns:
-            lower = df[col].quantile(0.01)
-            upper = df[col].quantile(0.99)
-            df[col] = df[col].clip(lower, upper)
-    return df
-
-#preprocess_data('test_data_110.csv', '110_preprocessed.csv')
-#preprocess_data('train_data_375.csv', '375_preprocessed.csv')#
-#data_enrichment()
-#clean_and_impute(pd.read_csv('110_preprocessed.csv')).to_csv('110_preprocessed.csv', index=False)
-#clean_and_impute(pd.read_csv('enriched_data.csv')).to_csv('enriched_data.csv', index=False)
-#clean_and_impute(pd.read_csv('375_preprocessed.csv')).to_csv('375_preprocessed.csv', index=False)
+preprocess_data('test_data_110.csv', '110_preprocessed.csv')
+preprocess_data('train_data_375.csv', '375_preprocessed.csv')
+data_enrichment()
+clean_and_impute(pd.read_csv('110_preprocessed.csv')).to_csv('./final_data/110_cleaned.csv', index=False)
+clean_and_impute(pd.read_csv('enriched_data.csv')).to_csv('./final_data/enriched_data_cleaned.csv', index=False)
+clean_and_impute(pd.read_csv('375_preprocessed.csv')).to_csv('./final_data/375_cleaned.csv', index=False)
