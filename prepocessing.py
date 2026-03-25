@@ -18,7 +18,7 @@ def time_weighted_average(group):
     
     delta_days = (last_date - re_date).dt.days
     
-    weights = 0.5 ** (delta_days / 3) # 3-day half-life for weighting, because patients' conditions can change rapidly
+    weights = 0.5 ** (delta_days / 7) # 7-day half-life for weighting, because patients' conditions can change rapidly
     exclude = ['PATIENT_ID', 'RE_DATE', 'outcome', 'age', 'gender', 'Admission time', 'Discharge time']
     biomarkers = [col for col in group.columns if col not in exclude]
 
@@ -66,8 +66,8 @@ def data_enrichment():
 def handle_outliers(df, cols):
     for col in cols:
         if col in df.columns:
-            lower = df[col].quantile(0.01)
-            upper = df[col].quantile(0.99)
+            lower = df[col].quantile(0.05)
+            upper = df[col].quantile(0.95)
             df[col] = df[col].clip(lower, upper)
     return df
 

@@ -10,7 +10,7 @@ from data_mining import get_model_results, perform_cross_validation
 
 df_375 = pd.read_csv("./final_data/375_cleaned.csv")
 
-top_3_features = ["PH value", "glucose", "Lactate dehydrogenase"]
+top_3_features = ["PH value", "glucose", "aspartate aminotransferase"]
 X_top3 = df_375[top_3_features]
 y_top3 = df_375["outcome"]
 
@@ -43,7 +43,7 @@ plt.text(1.3, 0.5, stats_text,
                    facecolor='#f9f9f9', 
                    edgecolor='#cccccc', 
                    alpha=1))
-plt.title("Statistical Top 3 Predictors (PH, Glucose, LDH)\nPerformance Summary", 
+plt.title("Statistical Top 3 Predictors (PH, Glucose, AST)\nPerformance Summary", 
           fontsize=14, fontweight='bold', pad=20)
 
 plt.ylabel('True Label', fontsize=12, fontweight='600')

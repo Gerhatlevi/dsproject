@@ -121,7 +121,7 @@ if __name__ == "__main__":
             display_labels=['Discharged', 'Deceased']
         )
         disp.plot(ax=axes[i], cmap='Blues', colorbar=False)
-        axes[i].set_title(f"LogReg: {res['Dataset']}\n(Recall: {res['LR_Test_Recall']:.2%})", 
+        axes[i].set_title(f"LogReg: {res['Dataset']}\n(Recall: {res['LR_Test_Recall']:.2%})",
                       fontsize=11, fontweight='bold', pad=15)
         if i > 0:
             axes[i].set_ylabel('')
