@@ -85,7 +85,7 @@ if __name__ == "__main__":
             "Importance": lr_res["Importance"] if "74" in name else None
         })
 
-    custom_colors = ['#5D6D7E', '#A93226', '#2C3E50', '#7B241C']
+    custom_colors = ['#5D6D7D', '#A93226', '#2C3E50', '#7B241C']
     res_df = pd.DataFrame(results_list)
     plot_df = res_df.set_index('Dataset')[['LR_CV_Recall', 'DT_CV_Recall', 'LR_Test_Recall', 'DT_Test_Recall']]
     ax = plot_df.plot(
